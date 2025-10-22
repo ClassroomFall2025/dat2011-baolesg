@@ -1,3 +1,5 @@
+import csv
+import os
 class nhanvien:
     def __init__(self, ma_nv, ten_nv, luong_nv):
         self.ma_nv = ma_nv
@@ -42,8 +44,11 @@ class truongphong (nhanvien):
             return "truong phong"
         def to_list(self):
             return [self.get_loai_nv(), self.ma_nv, self.ten_nv, str(self.luong_nv), "", "", str(self.trach_nhiem)]
-        
+
+
+
 ds_nv = []
+
 def doc_nhan_vien():
     print("Y2. Đọc thông tin nhân viên từ file và xuất danh sách nhân viên ra màn hình.")
 def xoa_nhan_vien_ma():
@@ -52,7 +57,7 @@ def cap_nhat_nhan_vien_ma():
     print("Y5. Cập nhật thông tin nhân viên theo mã nhập từ bàn phím và ghi thay đổi vào file.")
 
 
-def nhap_nhan_vien():
+def nhap_nhan_vien(self):
     while True:
         print("\nChọn loại nhân viên:")
         print("1. Hành chính")
@@ -66,21 +71,31 @@ def nhap_nhan_vien():
         ho_ten = input("Họ tên: ")
         luong = float(input("Lương cơ bản: "))
         if loai == "1":
-            nv = nhanvien(ma_nv, ho_ten, luong)
+            nv = nhanvien[ma_nv, ho_ten, luong]
         elif loai == "2":
             doanh_so = float(input("Doanh số bán hàng: "))
             hoa_hong = float(input("Tỉ lệ hoa hồng (%): "))
-            nv = tiepthi(ma_nv, ho_ten, luong, doanh_so, hoa_hong)
+            nv = tiepthi[ma_nv, ho_ten, luong, doanh_so, hoa_hong]
+            ds_nv.append(nv)
         elif loai == "3":
             trach_nhiem = float(input("Lương trách nhiệm: "))
-            nv = truongphong(ma_nv, ho_ten, luong, trach_nhiem)
+            nv = truongphong[ma_nv, ho_ten, luong, trach_nhiem]
+            ds_nv.append(nv)
         else:
             print("Loại nhân viên không hợp lệ!")
             continue
-        ds_nv.append(nv)
-        print("Đã thêm nhân viên.")
+    return self.ds_nv
 
-def tim_nv_ma():
+filename = input ("nhap ten file .csv: ")
+file_exist = os.path.exists (filename)
+mode = 'a' if file_exist else 'w'
+with open (filename, mode, newline='', encoding='utf-8') as file:
+    writer = csv.writer (file)
+    for nv in ds_nv:
+        writer.writerow (nv.to_list())
+    print (f"Da luu {len(ds_nv)} nhan vien vao file {filename}")
+
+def tim_nv_ma(self):
         ma_tim = input("Nhập mã nhân viên cần tìm: ")
         for nv in ds_nv:
             if nv.ma_nv == ma_tim:
@@ -88,7 +103,7 @@ def tim_nv_ma():
                 return
         print("Không tìm thấy nhân viên với mã đã cho.")
     
-def tim_nv_luong():
+def tim_nv_luong(self):
         min_luong = float(input("Nhập mức lương thấp nhất: "))
         max_luong = float(input("Nhập mức lương cao nhất: "))
         for nv in ds_nv:
@@ -97,13 +112,15 @@ def tim_nv_luong():
                 found = True
         if not found:
             print("Không có nhân viên nào trong khoảng lương đã cho.")
-def sap_xep_ho_ten():
+def sap_xep_ho_ten(self):
         ds_nv.sort(key=lambda nv: nv.ten_nv)
         print("Đã sắp xếp nhân viên theo họ tên.")
-def sap_xep_thu_nhap():
+        for nv in ds_nv:
+            nv.xuat()
+def sap_xep_thu_nhap(self):
         ds_nv.sort(key=lambda nv: nv.get_thu_nhap(), reverse=True)
         print("Đã sắp xếp nhân viên theo thu nhập.")
-def top_5_thu_nhap():
+def top_5_thu_nhap(self):
         ds_nv.sort(key=lambda nv: nv.get_thu_nhap(), reverse=True)
         print("Top 5 nhân viên có thu nhập cao nhất:")
         for nv in ds_nv[:5]:
